@@ -1,0 +1,16 @@
+.episodeList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 1200px;
+  justify-content: center;
+  background-color: blanchedalmond;
+}
+
+.episodeBox {
+  height: 420px;
+  width: 300px;
+  border-style: dotted;
+  text-align: center;
+  background-color: honeydew;
+}

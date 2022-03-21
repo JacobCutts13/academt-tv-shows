@@ -1,9 +1,8 @@
-import { greet } from "./utils/greet";
-import got from './data/got.json'
-
+import EpisodeList from "./components/episodeList";
+import "./style.css";
 
 function App(): JSX.Element {
-  return <h1>{greet("World")}</h1>;
+  return <EpisodeList />;
 }
 
 export default App;
