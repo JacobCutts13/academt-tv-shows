@@ -1,4 +1,4 @@
-import got from "../data/got.json";
+import simpsons from "../data/got.json";
 import { seasonNum } from "../utils/seasonNum";
 import searchFilter from "../utils/searchFilter";
 
@@ -17,6 +17,9 @@ export interface IEpisode {
     medium: string;
     original: string;
   };
+  rating: {
+    average: number;
+  };
   summary: string;
   _links: { self: { href: string } };
 }
@@ -25,7 +28,11 @@ interface EpisodeListProps {
 }
 
 function EpisodeList(props: EpisodeListProps): JSX.Element {
-  const episodeListFiltered = got.filter((episode) =>
+  const safeSimpsons = simpsons.filter(
+    (obj) => obj.image != null && obj.rating.average != null
+  );
+
+  const episodeListFiltered = safeSimpsons.filter((episode) =>
     searchFilter(episode, props.navSearch)
   );
 
@@ -37,14 +44,17 @@ function EpisodeList(props: EpisodeListProps): JSX.Element {
       <br></br>
       <img src={episode.image.medium} alt={episode.name + " image"} />
       <br></br>
-      {episode.summary.replace(/<\/?p[^>]*>/g, "").replace(/<\/?br[^>]*>/g, "")}
+      {episode.summary
+        .replace(/<\/?p[^>]*>/g, "")
+        .replace(/<\/?br[^>]*>/g, "")
+        .replace(/<\/?b[^>]*>/g, "")}
     </div>
   ));
 
   return (
     <>
       <p>
-        {episodeList.length} out of {got.length} episodes
+        {episodeList.length} out of {safeSimpsons.length} episodes
       </p>
       <div className="episodeList">{episodeList}</div>
     </>
