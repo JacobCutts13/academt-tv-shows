@@ -1,7 +1,8 @@
 import got from "../data/got.json";
 import { seasonNum } from "../utils/seasonNum";
+import searchFilter from "../utils/searchFilter";
 
-interface IEpisode {
+export interface IEpisode {
   id: number;
   url: string;
   name: string;
@@ -19,9 +20,16 @@ interface IEpisode {
   summary: string;
   _links: { self: { href: string } };
 }
+interface EpisodeListProps {
+  navSearch: string;
+}
 
-function EpisodeList(): JSX.Element {
-  const episodeList = got.map((episode: IEpisode) => (
+function EpisodeList(props: EpisodeListProps): JSX.Element {
+  const episodeListFiltered = got.filter((episode) =>
+    searchFilter(episode, props.navSearch)
+  );
+
+  const episodeList = episodeListFiltered.map((episode: IEpisode) => (
     <div className="episodeBox" key={episode.id}>
       <h3>
         {episode.name} - {seasonNum(episode.season, episode.number)}
@@ -32,7 +40,15 @@ function EpisodeList(): JSX.Element {
       {episode.summary.replace(/<\/?p[^>]*>/g, "").replace(/<\/?br[^>]*>/g, "")}
     </div>
   ));
-  return <div className="episodeList">{episodeList}</div>;
+
+  return (
+    <>
+      <p>
+        {episodeList.length} out of {got.length} episodes
+      </p>
+      <div className="episodeList">{episodeList}</div>
+    </>
+  );
 }
 
 export default EpisodeList;
