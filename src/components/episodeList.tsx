@@ -34,8 +34,7 @@ interface dropDownProps {
 }
 
 function EpisodeList(props: EpisodeListProps): JSX.Element {
-
-  const [dropDown, setDropDown] = useState<string>("")
+  const [dropDown, setDropDown] = useState<dropDownProps | null>(null);
 
   const safeSimpsons: IEpisode[] = simpsons.filter(
     (obj): obj is IEpisode => obj.image != null && obj.rating.average != null
@@ -45,19 +44,24 @@ function EpisodeList(props: EpisodeListProps): JSX.Element {
     (episode): episode is IEpisode => searchFilter(episode, props.navSearch)
   );
 
+  const dropDownEpisode = dropDown
+    ? episodeListFiltered.filter((episode): episode is IEpisode =>
+        episode.name.includes(dropDown.value)
+      )
+    : episodeListFiltered;
+
   const dropDownList: dropDownProps[] = safeSimpsons.map(
-    (episode: IEpisode): dropDownProps => (
-      {value: episode.name,
-      label: episode.name}
-    )
+    (episode: IEpisode): dropDownProps => ({
+      value: episode.name,
+      label: episode.name,
+    })
   );
 
-  const handleSetDropDown = (selected: string) => {
+  const handleSetDropDown = (selected: dropDownProps | null) => {
     setDropDown(selected);
-    console.log(selected);
-  }
+  };
 
-  const episodeList = episodeListFiltered.map((episode: IEpisode) => (
+  const episodeList = dropDownEpisode.map((episode: IEpisode) => (
     <div className="episodeBox" key={episode.id}>
       <h3>
         {episode.name} - {seasonNum(episode.season, episode.number)}
@@ -75,7 +79,13 @@ function EpisodeList(props: EpisodeListProps): JSX.Element {
   return (
     <>
       <p>
-        <Select options={dropDownList} isClearable onChange={(e): e is dropDownProps => handleSetDropDown(e.value)} />
+        <Select
+          options={dropDownList}
+          placeholder="Select episode"
+          isSearchable
+          isClearable
+          onChange={handleSetDropDown}
+        />
         {episodeList.length} out of {safeSimpsons.length} episodes
       </p>
       <div className="episodeList">{episodeList}</div>
