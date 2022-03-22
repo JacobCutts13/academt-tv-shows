@@ -1,5 +1,5 @@
 import Select from "react-select";
-import { useState } from "react";
+import { useState ,useEffect } from "react";
 import simpsons from "../data/simpsons.json";
 import { seasonNum } from "../utils/seasonNum";
 import searchFilter from "../utils/searchFilter";
@@ -35,9 +35,17 @@ interface dropDownProps {
 
 function EpisodeList(props: EpisodeListProps): JSX.Element {
 
-  const [dropDown, setDropDown] = useState<string>("")
+  const [dropDown, setDropDown] = useState<string>("");
 
-  const safeSimpsons: IEpisode[] = simpsons.filter(
+  const [episodes, setEpisodes] = useState<IEpisode[]>([])
+  useEffect(() => {
+    fetch("https://api.tvmaze.com/shows/527/episodes")
+      .then(response => response.json())
+      .then((jsonBody: IEpisode[]) => setEpisodes(jsonBody));
+  }, [])
+  console.log(episodes[0])
+
+  const safeSimpsons: IEpisode[] = episodes.filter(
     (obj): obj is IEpisode => obj.image != null && obj.rating.average != null
   );
 
@@ -54,7 +62,6 @@ function EpisodeList(props: EpisodeListProps): JSX.Element {
 
   const handleSetDropDown = (selected: string) => {
     setDropDown(selected);
-    console.log(selected);
   }
 
   const episodeList = episodeListFiltered.map((episode: IEpisode) => (
@@ -75,7 +82,7 @@ function EpisodeList(props: EpisodeListProps): JSX.Element {
   return (
     <>
       <p>
-        <Select options={dropDownList} isClearable onChange={(e): e is dropDownProps => handleSetDropDown(e.value)} />
+        {/* <Select options={dropDownList} isClearable onChange={(e): e is dropDownProps => handleSetDropDown(e.value)} /> */}
         {episodeList.length} out of {safeSimpsons.length} episodes
       </p>
       <div className="episodeList">{episodeList}</div>
