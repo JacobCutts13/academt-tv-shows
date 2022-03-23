@@ -1,5 +1,5 @@
 import Select from "react-select";
-import { useState ,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { seasonNum } from "../utils/seasonNum";
 import searchFilter from "../utils/searchFilter";
 
@@ -33,16 +33,15 @@ interface dropDownProps {
 }
 
 export default function EpisodeList(props: EpisodeListProps): JSX.Element {
-
   const [dropDown, setDropDown] = useState<string>("");
 
-  const [episodes, setEpisodes] = useState<IEpisode[]>([])
+  const [episodes, setEpisodes] = useState<IEpisode[]>([]);
   //Fetch data from API
   useEffect(() => {
     fetch("https://api.tvmaze.com/shows/527/episodes")
-      .then(response => response.json())
+      .then((response) => response.json())
       .then((jsonBody: IEpisode[]) => setEpisodes(jsonBody));
-  }, [])
+  }, []);
 
   //filter nulls
   const safeEpisodes: IEpisode[] = episodes.filter(
@@ -53,19 +52,19 @@ export default function EpisodeList(props: EpisodeListProps): JSX.Element {
     (episode): episode is IEpisode => searchFilter(episode, props.navSearch)
   );
   //filter select bar match
-    const episodeListSelected: IEpisode[] = episodeListFiltered.filter(
-      (episode): episode is IEpisode => episode.name.includes(dropDown)
-    ); 
-
-  const dropDownList: dropDownProps[] = safeEpisodes.map(
-    (episode: IEpisode): dropDownProps => (
-      {value: episode.name,
-      label: episode.name}
-    )
+  const episodeListSelected: IEpisode[] = episodeListFiltered.filter(
+    (episode): episode is IEpisode => episode.name.includes(dropDown)
   );
 
-  function handleSetDropDownBoolean(selected: dropDownProps|null) : boolean{
-    const dropDownTmp = selected? selected.value: ""
+  const dropDownList: dropDownProps[] = safeEpisodes.map(
+    (episode: IEpisode): dropDownProps => ({
+      value: episode.name,
+      label: episode.name,
+    })
+  );
+
+  function handleSetDropDownBoolean(selected: dropDownProps | null): boolean {
+    const dropDownTmp = selected ? selected.value : "";
     setDropDown(dropDownTmp);
     return true;
   }
@@ -89,12 +88,14 @@ export default function EpisodeList(props: EpisodeListProps): JSX.Element {
   return (
     <>
       <p>
-        <Select options={dropDownList} isClearable onChange={(e): e is dropDownProps => handleSetDropDownBoolean(e)} />
+        <Select
+          options={dropDownList}
+          isClearable
+          onChange={(e): e is dropDownProps => handleSetDropDownBoolean(e)}
+        />
         {episodeList.length} out of {safeEpisodes.length} episodes
       </p>
       <div className="episodeList">{episodeList}</div>
     </>
   );
 }
-
-
