@@ -14,3 +14,20 @@
   text-align: center;
   background-color: honeydew;
 }
+
+.showList {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 1200px;
+    justify-content: center;
+    background-color: blanchedalmond;
+  }
+
+.showBox {
+    height: 650px;
+    width: 500px;
+    border-style: dotted;
+    text-align: center;
+    background-color: honeydew;  
+}
