@@ -4,7 +4,12 @@ import Header from "./header";
 import EpisodeList from "./episodeList";
 import shows from "../data/shows.json";
 import Select from "react-select";
-import { showDropDownProps, IEpisode, ShowListDataProps, ShowListProps } from "./interfaces";
+import {
+  showDropDownProps,
+  IEpisode,
+  ShowListDataProps,
+  ShowListProps,
+} from "./interfaces";
 import showJSON from "../data/shows.json";
 import showSearchFilter from "../utils/showSearchFilter";
 
@@ -42,15 +47,20 @@ export default function Main(): JSX.Element {
     const safeShows: ShowListDataProps[] = showsTrimmed.filter(
       (obj): obj is ShowListDataProps => obj.image != null
     );
-  
+
     //filter search matches
     const showListFiltered: ShowListDataProps[] = safeShows.filter(
-      (show): show is ShowListDataProps => showSearchFilter(show, props.navSearch)
+      (show): show is ShowListDataProps =>
+        showSearchFilter(show, props.navSearch)
     );
-  
+
     //Create show box element
     const showList = showListFiltered.map((show: ShowListDataProps) => (
-      <button className="showBox" key={show.id} onClick={() => handleSetShow({value:show.links, label:show.name})}>
+      <button
+        className="showBox"
+        key={show.id}
+        onClick={() => handleSetShow({ value: show.links, label: show.name })}
+      >
         <div className="showTitle">
           <h3>{show.name}</h3>
         </div>
@@ -67,7 +77,7 @@ export default function Main(): JSX.Element {
           .replace(/<\/?i[^>]*>/g, "")}
       </button>
     ));
-  
+
     return (
       <>
         <div className="showList">{showList}</div>
@@ -88,18 +98,22 @@ export default function Main(): JSX.Element {
   ): JSX.Element {
     return (
       <>
-        {!show.value &&  <>
-        <ScrollToTop smooth />
-        <ShowList navSearch={search} />
-        </>}
-        {show.value !== "" && (<>
-          <ScrollToTop smooth />
-          <EpisodeList
-            navSearch={search}
-            url={showState.value}
-            showAPI={showAPI}
-          />
-        </>)}
+        {!show.value && (
+          <>
+            <ScrollToTop smooth />
+            <ShowList navSearch={search} />
+          </>
+        )}
+        {show.value !== "" && (
+          <>
+            <ScrollToTop smooth />
+            <EpisodeList
+              navSearch={search}
+              url={showState.value}
+              showAPI={showAPI}
+            />
+          </>
+        )}
       </>
     );
   }
@@ -116,7 +130,9 @@ export default function Main(): JSX.Element {
     <>
       <Header />
       <div className="navbar">
-        <button onClick={() => handleSetShow({value:"", label:""})}>Home</button>
+        <button onClick={() => handleSetShow({ value: "", label: "" })}>
+          Home
+        </button>
         <Select
           options={showData}
           isClearable
