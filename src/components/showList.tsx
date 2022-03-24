@@ -10,6 +10,7 @@ export default function ShowList(props: ShowListProps): JSX.Element {
       image: show.image.medium,
       summary: show.summary,
       links: show._links.self.href,
+      genres: show.genres,
     })
   );
   //filter nulls (MAYBE OTHERS NULL)
@@ -30,6 +31,9 @@ export default function ShowList(props: ShowListProps): JSX.Element {
       </div>
       <br></br>
       <img src={show.image} alt={show.name + " image"} />
+      <hr></hr>
+      {show.genres.map((e): string => "|" + e + "|")}
+      <br></br>
       <br></br>
       {show.summary
         .replace(/<\/?p[^>]*>/g, "")

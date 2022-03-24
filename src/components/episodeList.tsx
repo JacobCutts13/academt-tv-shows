@@ -38,9 +38,11 @@ export default function EpisodeList(props: EpisodeListProps): JSX.Element {
   //Create episode box element
   const episodeList = episodeListSelected.map((episode: IEpisode) => (
     <div className="episodeBox" key={episode.id}>
-      <h3>
-        {episode.name} - {seasonNum(episode.season, episode.number)}
-      </h3>
+      <div className="episodeTitle">
+        <h3>
+          {episode.name} - {seasonNum(episode.season, episode.number)}
+        </h3>
+      </div>
       <br></br>
       <img src={episode.image.medium} alt={episode.name + " image"} />
       <br></br>

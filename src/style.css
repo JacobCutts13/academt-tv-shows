@@ -57,10 +57,21 @@ input {
 .episodeBox {
   height: 420px;
   width: 300px;
-  border-style: dotted;
   text-align: center;
-  background-color: 1b1212;
+  background-color: #1b1212;
+  margin: 10px 20px;
   color: white;
+}
+
+.episodeTitle {
+  height: 100px;
+  width: 95%;
+  text-align: center;
+  font-size: x-large;
+  border-style: solid;
+  border-color: #03396c;
+  border-radius: 20px;
+  margin: 0px auto;
 }
 
 .showList {
@@ -83,7 +94,7 @@ input {
 
 .showTitle {
   height: 100px;
-  width: 95%;
+  width: 98%;
   text-align: center;
   font-size: x-large;
   border-style: solid;

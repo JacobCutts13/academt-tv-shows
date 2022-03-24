@@ -4,7 +4,7 @@ export interface ShowListDataProps {
   name: string;
   //type: string;
   //language: string;
-  //genres: string[];
+  genres: string[];
   //status: string;
   //runtime: number;
   // averageRuntime: number;
@@ -89,12 +89,4 @@ export interface EpisodeListProps {
 export interface dropDownProps {
   value: string;
   label: string;
-}
-
-export interface navProps {
-  search: string;
-  dropDown: {
-    value: string;
-    label: string;
-  };
 }
