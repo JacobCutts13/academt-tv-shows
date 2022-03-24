@@ -1,5 +1,3 @@
-import { StringLiteralLike } from "typescript";
-
 export interface ShowListDataProps {
   id: number;
   //url: string;
@@ -85,9 +83,14 @@ export interface IEpisode {
 export interface EpisodeListProps {
   navSearch: string;
   url: string;
+  showAPI: IEpisode[];
 }
+
+
 
 export interface dropDownProps {
   value: string;
   label: string;
 }
+
+
