@@ -1,18 +1,17 @@
 import Select from "react-select";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { seasonNum } from "../utils/seasonNum";
 import searchFilter from "../utils/searchFilter";
 import { IEpisode, EpisodeListProps, dropDownProps } from "./interfaces";
-import simpsons from "../data/simpsons.json";
 
 export default function EpisodeList(props: EpisodeListProps): JSX.Element {
   const [dropDown, setDropDown] = useState<string>("");
-  const [episodes, setEpisodes] = useState<IEpisode[]>([]);
-  
+
   //filter nulls
 
   const safeEpisodes: IEpisode[] = props.showAPI.filter(
-    (obj): obj is IEpisode => obj.image != null);
+    (obj): obj is IEpisode => obj.image != null
+  );
   //filter search matches
   const episodeListFiltered: IEpisode[] = safeEpisodes.filter(
     (episode): episode is IEpisode => searchFilter(episode, props.navSearch)

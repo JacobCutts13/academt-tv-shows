@@ -1,10 +1,8 @@
 import showJSON from "../data/shows.json";
-import { useState } from "react";
 import showSearchFilter from "../utils/showSearchFilter";
 import { ShowListDataProps, ShowListProps } from "./interfaces";
 
 export default function ShowList(props: ShowListProps): JSX.Element {
-  const [shows, setShows] = useState<ShowListDataProps[]>([]);
   const showsPopulated: ShowListDataProps[] = showJSON.map(
     (show): ShowListDataProps => ({
       id: show.id,
