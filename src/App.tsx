@@ -4,10 +4,10 @@ import "./style.css";
 
 function App(): JSX.Element {
   return (
-    <>
+    <div className="app">
       <Main />
       <Footer />
-    </>
+    </div>
   );
 }
 
