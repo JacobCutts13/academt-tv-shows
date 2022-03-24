@@ -110,11 +110,12 @@ input {
   width: 1200px;
   justify-content: center;
   margin: 10px auto;
+  color: white;
 }
 
 .memeBox {
   height: 1200px;
-  width: 800px;
+  width: 1000px;
   text-align: center;
   background-color: #1b1212;
   margin: 10px 20px;
