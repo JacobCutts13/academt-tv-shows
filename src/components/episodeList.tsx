@@ -10,7 +10,7 @@ export default function EpisodeList(props: EpisodeListProps): JSX.Element {
   //filter nulls
 
   const safeEpisodes: IEpisode[] = props.showAPI.filter(
-    (obj): obj is IEpisode => obj.image != null
+    (obj): obj is IEpisode => obj.image !== null && obj.summary !== null
   );
   //filter search matches
   const episodeListFiltered: IEpisode[] = safeEpisodes.filter(
