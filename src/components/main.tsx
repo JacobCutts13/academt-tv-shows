@@ -1,10 +1,17 @@
 import { useState, useEffect } from "react";
+import ScrollToTop from "react-scroll-to-top";
 import Header from "./header";
 import EpisodeList from "./episodeList";
 import shows from "../data/shows.json";
 import Select from "react-select";
-import { showDropDownProps, IEpisode } from "./interfaces";
-import ShowList from "./showList";
+import {
+  showDropDownProps,
+  IEpisode,
+  ShowListDataProps,
+  ShowListProps,
+} from "./interfaces";
+import showJSON from "../data/shows.json";
+import showSearchFilter from "../utils/showSearchFilter";
 
 export default function Main(): JSX.Element {
   const [search, setSearch] = useState<string>("");
@@ -20,10 +27,63 @@ export default function Main(): JSX.Element {
       label: show.name,
     })
   );
-  // making new nav state to hold both search info and dropdown info, then pass this into our conditional rendering so it rerenders everytime one of them changes
   const handleSetSearch = (inputSearch: string) => {
     setSearch(inputSearch);
   };
+
+  //Filtering show data and creating show buttons
+  function ShowList(props: ShowListProps): JSX.Element {
+    const showsTrimmed: ShowListDataProps[] = showJSON.map(
+      (show): ShowListDataProps => ({
+        id: show.id,
+        name: show.name,
+        image: show.image.medium,
+        summary: show.summary,
+        links: show._links.self.href,
+        genres: show.genres,
+      })
+    );
+    //filter nulls (MAYBE OTHERS NULL)
+    const safeShows: ShowListDataProps[] = showsTrimmed.filter(
+      (obj): obj is ShowListDataProps => obj.image != null
+    );
+
+    //filter search matches
+    const showListFiltered: ShowListDataProps[] = safeShows.filter(
+      (show): show is ShowListDataProps =>
+        showSearchFilter(show, props.navSearch)
+    );
+
+    //Create show box element
+    const showList = showListFiltered.map((show: ShowListDataProps) => (
+      <button
+        className="showBox"
+        key={show.id}
+        onClick={() => handleSetShow({ value: show.links, label: show.name })}
+      >
+        <div className="showTitle">
+          <h3>{show.name}</h3>
+        </div>
+        <br></br>
+        <img src={show.image} alt={show.name + " image"} />
+        <hr></hr>
+        {show.genres.map((e): string => "|" + e + "|")}
+        <br></br>
+        <br></br>
+        {show.summary
+          .replace(/<\/?p[^>]*>/g, "")
+          .replace(/<\/?br[^>]*>/g, "")
+          .replace(/<\/?b[^>]*>/g, "")
+          .replace(/<\/?i[^>]*>/g, "")}
+      </button>
+    ));
+
+    return (
+      <>
+        <div className="showList">{showList}</div>
+      </>
+    );
+  }
 
   function handleSetShow(show: showDropDownProps | null): boolean {
     const showTmp = show ? show : { value: "", label: "" };
@@ -38,13 +98,21 @@ export default function Main(): JSX.Element {
   ): JSX.Element {
     return (
       <>
-        {!show.value && <ShowList navSearch={search} />}
+        {!show.value && (
+          <>
+            <ScrollToTop smooth />
+            <ShowList navSearch={search} />
+          </>
+        )}
         {show.value !== "" && (
-          <EpisodeList
-            navSearch={search}
-            url={showState.value}
-            showAPI={showAPI}
-          />
+          <>
+            <ScrollToTop smooth />
+            <EpisodeList
+              navSearch={search}
+              url={showState.value}
+              showAPI={showAPI}
+            />
+          </>
         )}
       </>
     );
@@ -62,6 +130,9 @@ export default function Main(): JSX.Element {
     <>
       <Header />
       <div className="navbar">
+        <button onClick={() => handleSetShow({ value: "", label: "" })}>
+          Home
+        </button>
         <Select
           options={showData}
           isClearable
