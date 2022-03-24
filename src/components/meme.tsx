@@ -1,12 +1,15 @@
-import peaky from "../data/peakyblinders.json"
+import { memeProps, memesProps } from "./interfaces";
 
-// export default function MemeImage () : JSX.Element {    
-//     const memeData =
-//     return(  
-//     <div className="memeBox">
-//         <h1>Top meme for this episode</h1>
-//         <h2>{peaky.data.children[2].data.title}</h2>
-//         <img src={peaky.data.children[2].data.url} alt={"meme image title " + peaky.data.children[2].data.title} />
-//     </div>
-//     )
-// }
+export default function Memes(props: memesProps): JSX.Element {
+  return (
+    <div className="memes">
+      <h1>Top meme for this episode</h1>
+      {props.memeArray.map((meme: memeProps) => (
+        <div className="memeBox" key={meme.title}>
+          <h2>{meme.title}</h2>
+          <img src={meme.url} alt={"meme image title " + meme.url} />
+        </div>
+      ))}
+    </div>
+  );
+}

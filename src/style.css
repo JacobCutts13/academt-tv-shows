@@ -102,3 +102,25 @@ input {
   border-radius: 20px;
   margin: 0px auto;
 }
+
+.memes {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 1200px;
+  justify-content: center;
+  margin: 10px auto;
+}
+
+.memeBox {
+  height: 1200px;
+  width: 800px;
+  text-align: center;
+  background-color: #1b1212;
+  margin: 10px 20px;
+  color: white;
+}
+
+img {
+  max-width: 100%;
+}

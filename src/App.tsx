@@ -8,7 +8,7 @@ function App(): JSX.Element {
     <div className="app">
       <Main />
       <Footer />
-     {/* <Meme /> */}
+      {/* <Meme /> */}
     </div>
   );
 }
