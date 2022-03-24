@@ -86,11 +86,7 @@ export interface EpisodeListProps {
   showAPI: IEpisode[];
 }
 
-
-
 export interface dropDownProps {
   value: string;
   label: string;
 }
-
-

@@ -10,7 +10,7 @@ export default function ShowList(props: ShowListProps): JSX.Element {
       image: show.image.medium,
       summary: show.summary,
       links: show._links.self.href,
-      genres: show.genres
+      genres: show.genres,
     })
   );
   //filter nulls (MAYBE OTHERS NULL)
