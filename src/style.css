@@ -1,10 +1,57 @@
+.app {
+  width: 100%;
+  background-color: #0e1111;
+  padding: 20px;
+}
+
+.header {
+  text-align: center;
+  border-style: solid;
+  border-color: #005b96;
+  background-color: #1b1212;
+  border-radius: 20px;
+  color: white;
+  width: 400px;
+  margin: 0px auto;
+}
+
+.navbar {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 1200px;
+  margin: 10px 600px;
+}
+
+input {
+  width: 50%;
+  margin: 0px 20px;
+}
+
+.episodeSelect {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 1200px;
+  justify-content: center;
+  margin: 10px auto;
+  padding: 0px 20px;
+  text-align: center;
+}
+
+.episodeCount {
+  color: white;
+  margin: 0px 10px;
+  width: 200px;
+}
+
 .episodeList {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   width: 1200px;
   justify-content: center;
-  background-color: blanchedalmond;
+  margin: 10px auto;
 }
 
 .episodeBox {
@@ -12,5 +59,35 @@
   width: 300px;
   border-style: dotted;
   text-align: center;
-  background-color: honeydew;
+  background-color: 1b1212;
+  color: white;
+}
+
+.showList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 1200px;
+  justify-content: center;
+  margin: 10px auto;
+}
+
+.showBox {
+  height: 750px;
+  width: 500px;
+  text-align: center;
+  background-color: #1b1212;
+  margin: 10px 20px;
+  color: white;
+}
+
+.showTitle {
+  height: 100px;
+  width: 95%;
+  text-align: center;
+  font-size: x-large;
+  border-style: solid;
+  border-color: #03396c;
+  border-radius: 20px;
+  margin: 0px auto;
 }

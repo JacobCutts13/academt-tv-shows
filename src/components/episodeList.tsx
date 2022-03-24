@@ -1,67 +1,42 @@
 import Select from "react-select";
 import { useState } from "react";
-import simpsons from "../data/simpsons.json";
 import { seasonNum } from "../utils/seasonNum";
 import searchFilter from "../utils/searchFilter";
+import { IEpisode, EpisodeListProps, dropDownProps } from "./interfaces";
 
-export interface IEpisode {
-  id: number;
-  url: string;
-  name: string;
-  season: number;
-  number: number;
-  type: string;
-  airdate: string;
-  airtime: string;
-  airstamp: string;
-  runtime: number;
-  image: {
-    medium: string;
-    original: string;
-  };
-  rating: {
-    average: number;
-  };
-  summary: string;
-  _links: { self: { href: string } };
-}
-interface EpisodeListProps {
-  navSearch: string;
-}
-interface dropDownProps {
-  value: string;
-  label: string;
-}
+export default function EpisodeList(props: EpisodeListProps): JSX.Element {
+  const [dropDown, setDropDown] = useState<string>("");
 
-function EpisodeList(props: EpisodeListProps): JSX.Element {
-  const [dropDown, setDropDown] = useState<dropDownProps | null>(null);
+  //filter nulls
 
-  const safeSimpsons: IEpisode[] = simpsons.filter(
-    (obj): obj is IEpisode => obj.image != null && obj.rating.average != null
+  const safeEpisodes: IEpisode[] = props.showAPI.filter(
+    (obj): obj is IEpisode => obj.image != null
   );
-
-  const episodeListFiltered: IEpisode[] = safeSimpsons.filter(
+  //filter search matches
+  const episodeListFiltered: IEpisode[] = safeEpisodes.filter(
     (episode): episode is IEpisode => searchFilter(episode, props.navSearch)
   );
+  //filter select bar match
+  const episodeListSelected: IEpisode[] = episodeListFiltered.filter(
+    (episode): episode is IEpisode => episode.name.includes(dropDown)
+  );
 
-  const dropDownEpisode = dropDown
-    ? episodeListFiltered.filter((episode): episode is IEpisode =>
-        episode.name.includes(dropDown.value)
-      )
-    : episodeListFiltered;
-
-  const dropDownList: dropDownProps[] = safeSimpsons.map(
+  //create elements insde dropdownlist
+  const dropDownList: dropDownProps[] = safeEpisodes.map(
     (episode: IEpisode): dropDownProps => ({
       value: episode.name,
       label: episode.name,
     })
   );
 
-  const handleSetDropDown = (selected: dropDownProps | null) => {
-    setDropDown(selected);
-  };
+  function handleSetDropDownBoolean(selected: dropDownProps | null): boolean {
+    const dropDownTmp = selected ? selected.value : "";
+    setDropDown(dropDownTmp);
+    return true;
+  }
 
-  const episodeList = dropDownEpisode.map((episode: IEpisode) => (
+  //Create episode box element
+  const episodeList = episodeListSelected.map((episode: IEpisode) => (
     <div className="episodeBox" key={episode.id}>
       <h3>
         {episode.name} - {seasonNum(episode.season, episode.number)}
@@ -78,19 +53,19 @@ function EpisodeList(props: EpisodeListProps): JSX.Element {
 
   return (
     <>
-      <p>
+      <div className="episodeSelect">
         <Select
           options={dropDownList}
-          placeholder="Select episode"
-          isSearchable
           isClearable
-          onChange={handleSetDropDown}
+          onChange={(e): e is dropDownProps => handleSetDropDownBoolean(e)}
         />
-        {episodeList.length} out of {safeSimpsons.length} episodes
-      </p>
+
+        <div className="episodeCount">
+          {episodeList.length} out of {safeEpisodes.length} episodes
+        </div>
+      </div>
+
       <div className="episodeList">{episodeList}</div>
     </>
   );
 }
-
-export default EpisodeList;

@@ -1,4 +1,4 @@
-import { IEpisode } from "../components/episodeList";
+import { IEpisode } from "../components/interfaces";
 
 export default function searchFilter(
   episode: IEpisode,
