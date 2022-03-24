@@ -14,7 +14,7 @@ export default function EpisodeList(props: EpisodeListProps): JSX.Element {
   useEffect( () => {
   const startDate = dateToEpochConverter(episodeData.date)
   const endDate = (Number(startDate) + 604800).toString()
-  const memeURLToFetch: string  = "https://api.pushshift.io/reddit/search/submission/?subreddit=" + noSpacesShowName +"&after=" + startDate + "&before=" + endDate + "&aggs=author,link_id,subreddit,created_utc"
+  const memeURLToFetch: string  = "https://api.pushshift.io/reddit/search/submission/?subreddit=" + noSpacesShowName +"&after=" + startDate + "&before=" + endDate + "&sort=desc&sort_type=score&aggs=author,link_id,subreddit,created_utc"
   console.log(memeURLToFetch)
   }, [episodeData])
 
