@@ -11,9 +11,12 @@ export default function EpisodeList(props: EpisodeListProps): JSX.Element {
   //Fetch data from API
   const url = new Request(props.url);
   useEffect(() => {
-    fetch(url)
-      .then((response) => response.json())
-      .then((jsonBody: IEpisode[]) => console.log(jsonBody));
+    const fetchEpisode = async ()  => {
+      const response = await fetch(url);
+      const jsonBody = await  response.json();
+      setEpisodes(jsonBody)
+    }
+    fetchEpisode
   }, []);
   //filter nulls
 
@@ -46,9 +49,11 @@ export default function EpisodeList(props: EpisodeListProps): JSX.Element {
   //Create episode box element
   const episodeList = episodeListSelected.map((episode: IEpisode) => (
     <div className="episodeBox" key={episode.id}>
-      <h3>
-        {episode.name} - {seasonNum(episode.season, episode.number)}
-      </h3>
+      <div className="episodeTitle">
+        <h3>
+          {episode.name} - {seasonNum(episode.season, episode.number)}
+        </h3>
+      </div>
       <br></br>
       <img src={episode.image.medium} alt={episode.name + " image"} />
       <br></br>
