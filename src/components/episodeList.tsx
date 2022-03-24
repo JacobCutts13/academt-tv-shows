@@ -26,6 +26,7 @@ export interface IEpisode {
 }
 interface EpisodeListProps {
   navSearch: string;
+  showID: number
 }
 interface dropDownProps {
   value: string;
@@ -37,8 +38,11 @@ export default function EpisodeList(props: EpisodeListProps): JSX.Element {
 
   const [episodes, setEpisodes] = useState<IEpisode[]>([]);
   //Fetch data from API
+  const stringURL: string = "https://api.tvmaze.com/shows/" + props.showID + "/episodes";
+  const url = new URL(stringURL)
+  console.log(stringURL)
   useEffect(() => {
-    fetch("https://api.tvmaze.com/shows/527/episodes")
+    fetch(url)  //CHANGE search passing string into fetch
       .then((response) => response.json())
       .then((jsonBody: IEpisode[]) => setEpisodes(jsonBody));
   }, []);
