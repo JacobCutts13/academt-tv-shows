@@ -1,11 +1,22 @@
 import Select from "react-select";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { seasonNum } from "../utils/seasonNum";
 import searchFilter from "../utils/searchFilter";
-import { IEpisode, EpisodeListProps, dropDownProps } from "./interfaces";
+import { IEpisode, EpisodeListProps, dropDownProps, episodeDataProps } from "./interfaces";
+import dateToEpochConverter from "../utils/dateToEpochConverter";
 
 export default function EpisodeList(props: EpisodeListProps): JSX.Element {
   const [dropDown, setDropDown] = useState<string>("");
+  const [episodeData, setEpisodeData] = useState<episodeDataProps>({date: "", title: ""})
+  //fetching memes
+  const noSpacesShowName = props.showName.replace(" ", "")
+
+  useEffect( () => {
+  const startDate = dateToEpochConverter(episodeData.date)
+  const endDate = (Number(startDate) + 604800).toString()
+  const memeURLToFetch: string  = "https://api.pushshift.io/reddit/search/submission/?subreddit=" + noSpacesShowName +"&after=" + startDate + "&before=" + endDate + "&aggs=author,link_id,subreddit,created_utc"
+  console.log(memeURLToFetch)
+  }, [episodeData])
 
   //filter nulls
 
@@ -37,7 +48,7 @@ export default function EpisodeList(props: EpisodeListProps): JSX.Element {
 
   //Create episode box element
   const episodeList = episodeListSelected.map((episode: IEpisode) => (
-    <div className="episodeBox" key={episode.id}>
+    <button className="episodeBox" key={episode.id} onClick={ () => setEpisodeData({date: episode.airdate, title: episode.name})}>
       <div className="episodeTitle">
         <h3>
           {episode.name} - {seasonNum(episode.season, episode.number)}
@@ -50,7 +61,8 @@ export default function EpisodeList(props: EpisodeListProps): JSX.Element {
         .replace(/<\/?p[^>]*>/g, "")
         .replace(/<\/?br[^>]*>/g, "")
         .replace(/<\/?b[^>]*>/g, "")}
-    </div>
+        
+    </button>
   ));
 
   return (

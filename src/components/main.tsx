@@ -111,6 +111,7 @@ export default function Main(): JSX.Element {
               navSearch={search}
               url={showState.value}
               showAPI={showAPI}
+              showName={showState.label}
             />
           </>
         )}

@@ -84,9 +84,20 @@ export interface EpisodeListProps {
   navSearch: string;
   url: string;
   showAPI: IEpisode[];
+  showName: string
 }
 
 export interface dropDownProps {
   value: string;
   label: string;
+}
+
+export interface memeProps{
+    url: string;
+    title: string;
+}
+
+export interface episodeDataProps {
+    date: string;
+    title: string;
 }
