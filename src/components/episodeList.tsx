@@ -8,18 +8,11 @@ import simpsons from "../data/simpsons.json";
 export default function EpisodeList(props: EpisodeListProps): JSX.Element {
   const [dropDown, setDropDown] = useState<string>("");
   const [episodes, setEpisodes] = useState<IEpisode[]>([]);
-  //Fetch data from API
-  const url = new Request(props.url);
-  useEffect(() => {
-    fetch(url)
-      .then((response) => response.json())
-      .then((jsonBody: IEpisode[]) => console.log(jsonBody));
-  }, []);
+  
   //filter nulls
 
-  const safeEpisodes: IEpisode[] = simpsons.filter(
-    (obj): obj is IEpisode => obj.image != null && obj.rating.average != null
-  );
+  const safeEpisodes: IEpisode[] = props.showAPI.filter(
+    (obj): obj is IEpisode => obj.image != null);
   //filter search matches
   const episodeListFiltered: IEpisode[] = safeEpisodes.filter(
     (episode): episode is IEpisode => searchFilter(episode, props.navSearch)
