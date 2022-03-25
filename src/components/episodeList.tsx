@@ -1,11 +1,63 @@
 import Select from "react-select";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { seasonNum } from "../utils/seasonNum";
 import searchFilter from "../utils/searchFilter";
-import { IEpisode, EpisodeListProps, dropDownProps } from "./interfaces";
+import {
+  IEpisode,
+  EpisodeListProps,
+  dropDownProps,
+  episodeDataProps,
+  memeProps,
+} from "./interfaces";
+import dateToEpochConverter from "../utils/dateToEpochConverter";
+import Memes from "./meme";
 
 export default function EpisodeList(props: EpisodeListProps): JSX.Element {
   const [dropDown, setDropDown] = useState<string>("");
+  const [clickEpisode, setClickEpisode] = useState<episodeDataProps>({
+    date: "",
+    title: "",
+  });
+  const [episodeMemes, setEpisodeMemes] = useState<memeProps[]>([]);
+
+  const noSpacesShowName = props.showName.replace(" ", "");
+  //fetching memes
+  useEffect(() => {
+    if (clickEpisode.date !== "" && clickEpisode.title) {
+      const startDate =
+        clickEpisode.date === "0"
+          ? ""
+          : "&after" + dateToEpochConverter(clickEpisode.date);
+      const endDate =
+        clickEpisode.date === "0"
+          ? ""
+          : "&before" + (Number(startDate) + 1000000).toString();
+      const memeURLToFetch: string =
+        "https://api.pushshift.io/reddit/search/submission/?subreddit=" +
+        noSpacesShowName +
+        startDate +
+        endDate +
+        "&sort=desc&sort_type=score&aggs=author,link_id,subreddit,created_utc";
+      const url = new Request(memeURLToFetch);
+      console.log(url.url);
+      fetch(url.url)
+        .then((response) => response.json())
+        .then((memejson) =>
+          memejson.data.filter((e: memeProps) => e.post_hint === "image")
+        )
+        .then((memejson: memeProps[]) => {
+          const mappedMemes: memeProps[] = memejson.map(
+            (e): memeProps => ({
+              title: e.title,
+              url: e.url,
+              post_hint: e.post_hint,
+              full_link: e.full_link,
+            })
+          );
+          setEpisodeMemes(mappedMemes);
+        });
+    }
+  }, [clickEpisode, noSpacesShowName]);
 
   //filter nulls
 
@@ -35,9 +87,19 @@ export default function EpisodeList(props: EpisodeListProps): JSX.Element {
     return true;
   }
 
+  function handleTopMemes(): void {
+    setClickEpisode({ date: "0", title: "0" });
+  }
+
   //Create episode box element
   const episodeList = episodeListSelected.map((episode: IEpisode) => (
-    <div className="episodeBox" key={episode.id}>
+    <button
+      className="episodeBox"
+      key={episode.id}
+      onClick={() =>
+        setClickEpisode({ date: episode.airdate, title: episode.name })
+      }
+    >
       <div className="episodeTitle">
         <h3>
           {episode.name} - {seasonNum(episode.season, episode.number)}
@@ -50,24 +112,40 @@ export default function EpisodeList(props: EpisodeListProps): JSX.Element {
         .replace(/<\/?p[^>]*>/g, "")
         .replace(/<\/?br[^>]*>/g, "")
         .replace(/<\/?b[^>]*>/g, "")}
-    </div>
+    </button>
   ));
 
-  return (
-    <>
-      <div className="episodeSelect">
-        <Select
-          options={dropDownList}
-          isClearable
-          onChange={(e): e is dropDownProps => handleSetDropDownBoolean(e)}
-        />
+  function conditionalRendering(episodeMemes: memeProps[]): JSX.Element {
+    return (
+      <>
+        {episodeMemes.length <= 1 && (
+          <>
+            <div className="episodeSelect">
+              <Select
+                options={dropDownList}
+                isClearable
+                onChange={(e): e is dropDownProps =>
+                  handleSetDropDownBoolean(e)
+                }
+              />
 
-        <div className="episodeCount">
-          {episodeList.length} out of {safeEpisodes.length} episodes
-        </div>
-      </div>
+              <div className="episodeCount">
+                {episodeList.length} out of {safeEpisodes.length} episodes
+              </div>
+            </div>
+            <div className="topMemeButton">
+              <button className="button buttonMeme" onClick={handleTopMemes}>
+                Top Memes
+              </button>
+            </div>
 
-      <div className="episodeList">{episodeList}</div>
-    </>
-  );
+            <div className="episodeList">{episodeList}</div>
+          </>
+        )}
+        {episodeMemes.length > 1 && <Memes memeArray={episodeMemes} />}
+      </>
+    );
+  }
+
+  return <>{conditionalRendering(episodeMemes)}</>;
 }
