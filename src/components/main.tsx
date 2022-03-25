@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import ScrollToTop from "react-scroll-to-top";
-import Header from "./header";
 import EpisodeList from "./episodeList";
 import shows from "../data/shows.json";
 import Select from "react-select";
@@ -129,7 +128,6 @@ export default function Main(): JSX.Element {
 
   return (
     <>
-      <Header />
       <div className="navbar">
         <button onClick={() => handleSetShow({ value: "", label: "" })}>
           Home

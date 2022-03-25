@@ -24,17 +24,22 @@ export default function EpisodeList(props: EpisodeListProps): JSX.Element {
   //fetching memes
   useEffect(() => {
     if (clickEpisode.date !== "" && clickEpisode.title) {
-      const startDate = 1641063031; //dateToEpochConverter(clickEpisode.date)
-      const endDate = 1643741431; //(Number(startDate) + 604800).toString()
+      const startDate =
+        clickEpisode.date === "0"
+          ? ""
+          : "&after" + dateToEpochConverter(clickEpisode.date);
+      const endDate =
+        clickEpisode.date === "0"
+          ? ""
+          : "&before" + (Number(startDate) + 1000000).toString();
       const memeURLToFetch: string =
         "https://api.pushshift.io/reddit/search/submission/?subreddit=" +
         noSpacesShowName +
-        "&after=" +
         startDate +
-        "&before=" +
         endDate +
         "&sort=desc&sort_type=score&aggs=author,link_id,subreddit,created_utc";
       const url = new Request(memeURLToFetch);
+      console.log(url.url);
       fetch(url.url)
         .then((response) => response.json())
         .then((memejson) =>
@@ -52,7 +57,7 @@ export default function EpisodeList(props: EpisodeListProps): JSX.Element {
           setEpisodeMemes(mappedMemes);
         });
     }
-  }, [clickEpisode]);
+  }, [clickEpisode, noSpacesShowName]);
 
   //filter nulls
 
@@ -80,6 +85,10 @@ export default function EpisodeList(props: EpisodeListProps): JSX.Element {
     const dropDownTmp = selected ? selected.value : "";
     setDropDown(dropDownTmp);
     return true;
+  }
+
+  function handleTopMemes(): void {
+    setClickEpisode({ date: "0", title: "0" });
   }
 
   //Create episode box element
@@ -123,6 +132,11 @@ export default function EpisodeList(props: EpisodeListProps): JSX.Element {
               <div className="episodeCount">
                 {episodeList.length} out of {safeEpisodes.length} episodes
               </div>
+            </div>
+            <div className="topMemeButton">
+              <button className="button buttonMeme" onClick={handleTopMemes}>
+                Top Memes
+              </button>
             </div>
 
             <div className="episodeList">{episodeList}</div>
